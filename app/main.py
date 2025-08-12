@@ -1,14 +1,11 @@
-from fastapi import FastAPI, HTTPException
-from app.routes.payment_route import payment_router
-from dotenv import load_dotenv
+from fastapi import FastAPI
+from .routes.oauth_routes import router as oauth_router
+from .routes.payment_link import router as payment_link_router
 
-load_dotenv()
 app = FastAPI()
 
+# OAuth routes (one-time to capture refresh token)
+app.include_router(oauth_router)
 
-@app.get("/health")
-async def health_check():
-    return {"status": "healthy"}
-
-
-app.include_router(payment_router, prefix="/payments", tags=["payments"])
+# Payment Link routes
+app.include_router(payment_link_router)
